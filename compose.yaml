@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mariadb:latest
+    container_name: portal_mariadb
+    environment:
+      MYSQL_DATABASE: portal_db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: portal_app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mariadb://db:3306/portal_db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
+
+volumes:
+  mariadb_data:
