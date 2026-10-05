@@ -10,13 +10,12 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    # Adicionamos o serviço do MariaDB para o GitHub Actions usar durante os testes
     services:
       mariadb:
         image: mariadb:latest
         env:
           MYSQL_DATABASE: portal_db
-          MYSQL_ROOT_PASSWORD: usuario123
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -36,4 +35,4 @@ jobs:
         env:
           DB_URL: jdbc:mariadb://localhost:3306/portal_db
           DB_USER: root
-          DB_PASSWORD: usuario123
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
