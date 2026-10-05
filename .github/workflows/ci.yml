@@ -28,12 +28,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-
-      - name: Dar permissao de execucao ao Maven Wrapper
-        run: chmod +x mvnw
+          cache: 'maven'
 
       - name: Executar Testes com Maven
-        run: ./mvnw verify
+        run: mvn clean verify
         env:
           DB_URL: jdbc:mariadb://localhost:3306/portal_db
           DB_USER: root
