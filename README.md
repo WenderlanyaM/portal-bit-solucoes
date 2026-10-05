@@ -1,3 +1,6 @@
+
+---
+
 # README - Portal de Solicitações Internas (bit Soluções)
 
 Aplicação Web Full Stack desenvolvida para o desafio técnico do Processo Seletivo para **Desenvolvedor(a) de Sistemas Júnior** da **bit Soluções**. O sistema consiste em uma plataforma corporativa para registro, acompanhamento, filtragem, ordenação dinâmica e gestão do ciclo de vida de solicitações internas de colaboradores, contemplando tanto interface web (SSR) quanto endpoints dedicados para API REST.
@@ -9,62 +12,79 @@ Aplicação Web Full Stack desenvolvida para o desafio técnico do Processo Sele
 Para compilar e executar o projeto corretamente, certifique-se de ter os seguintes componentes instalados em sua máquina:
 
 ### Linguagem utilizada
+
 * **Java 21 LTS** (JDK versão `21` ou superior).
 
-### Banco de dados
-* **MariaDB Server** (executado de forma containerizada e isolada através do **Docker Engine** e **Docker Compose**).
+### Infraestrutura & Containerização
+
+* **Docker Engine** e **Docker Compose** (para execução containerizada recomendada).
 
 ### Dependências
+
 O gerenciamento das dependências do projeto é realizado pelo **Apache Maven**. As principais bibliotecas configuradas no arquivo `pom.xml` são:
 
 * **Backend e Persistência:**
-   * `Spring Boot` (v4.1.1): Framework base para injeção de dependências e controle MVC.
-   * `Spring Security`: Autenticação customizada, criptografia com BCrypt e gerenciamento de sessão HTTP.
-   * `Spring Data JPA / Hibernate ORM`: Abstração de dados, mapeamento objeto-relacional (ORM) e otimização via `@EntityGraph`.
-   * `Flyway Core`: Ferramenta de migração automatizada para versionamento de esquemas DDL e carga de dados iniciais.
-   * `Jakarta Bean Validation`: Validação declarativa dos formulários.
-   * `MariaDB Connector/J`: Driver JDBC para comunicação com o banco de dados.
+* `Spring Boot` (v4.1.1): Framework base para injeção de dependências e controle MVC.
+* `Spring Security`: Autenticação customizada, criptografia com BCrypt e gerenciamento de sessão HTTP.
+* `Spring Data JPA / Hibernate ORM`: Abstração de dados, mapeamento objeto-relacional (ORM) e otimização via `@EntityGraph`.
+* `Flyway Core`: Ferramenta de migração automatizada para versionamento de esquemas DDL e carga de dados iniciais.
+* `Jakarta Bean Validation`: Validação declarativa dos formulários.
+* `MariaDB Connector/J`: Driver JDBC para comunicação com o banco de dados.
+
 
 * **API REST & Tratamento de Erros:**
-   * `Spring MVC / ProblemDetail`: Suporte nativo ao padrão RFC 9457 para respostas de erro em JSON padronizado (`/api/tickets`).
+* `Spring MVC / ProblemDetail`: Suporte nativo ao padrão RFC 9457 para respostas de erro em JSON padronizado (`/api/tickets`).
+
 
 * **Frontend:**
-   * `Thymeleaf`: Motor de renderização dinâmico de templates (Server-Side Rendering - SSR).
-   * `Thymeleaf Extras Spring Security`: Integração de permissões de segurança diretamente nas views.
-   * `Bootstrap 5` e `Bootstrap Icons`: Framework CSS para layout responsivo, limpo em tons de azul/branco e com suporte a Tema Escuro.
+* `Thymeleaf`: Motor de renderização dinâmico de templates (Server-Side Rendering - SSR).
+* `Thymeleaf Extras Spring Security`: Integração de permissões de segurança diretamente nas views.
+* `Bootstrap 5` e `Bootstrap Icons`: Framework CSS para layout responsivo, limpo em tons de azul/branco e com suporte a Tema Escuro.
+
 
 * **Testes e DevOps:**
-   * `JUnit 5` e `Mockito`: Suporte a testes unitários e comportamentais isolados.
-   * `GitHub Actions`: Pipeline de Integração Contínua (CI/CD) para verificação automática de build e testes a cada *push*.
+* `JUnit 5` e `Mockito`: Suporte a testes unitários e comportamentais isolados.
+* `GitHub Actions`: Pipeline de Integração Contínua (CI/CD) para verificação automática de build e testes a cada *push*.
+
+
 
 ---
 
-## 2. Instalação
+## 2. Instalação e Execução
 
-Siga o passo a passo detalhado abaixo para realizar a preparação completa do ambiente em sua máquina local.
+### Opção A: Execução Completa via Docker Compose (Recomendado)
 
-### Passo a passo completo para: Banco de dados
-A infraestrutura de dados foi projetada para rodar de maneira isolada em containers através do Docker Compose.
+A aplicação e o banco de dados foram totalmente containerizados, permitindo que todo o ecossistema suba de forma integrada e simultânea com apenas um comando.
 
-1. Certifique-se de que o **Docker Desktop** (ou o daemon do Docker) esteja ativo e em execução em sua máquina.
-2. Na raiz da pasta do projeto (onde se encontra o arquivo `compose.yaml`), execute o seguinte comando no terminal para inicializar o container do banco de dados em segundo plano:
-   ```bash
-   docker compose up -d
+1. Certifique-se de que o **Docker Desktop** (ou o daemon do Docker) está ativo em sua máquina.
+2. Na raiz da pasta do projeto (onde se encontra o arquivo `compose.yaml`), execute o seguinte comando no terminal:
+```bash
+docker compose up --build
+
+```
 
 
+3. O Docker iniciará o contentor do banco de dados MariaDB e, em seguida, compilará e iniciará a aplicação Spring Boot na porta `8080` de forma totalmente automatizada.
 
-3. O Docker subirá o banco de dados configurado, que ficará aguardando conexões na porta local `3306`.
+---
 
-### Passo a passo completo para: Backend
+### Opção B: Execução Nativa (Backend via IntelliJ IDEA & Banco via Docker)
 
-A instalação do backend não requer passos manuais de compilação prévia, pois o Maven fará isso durante a inicialização.
-Além disso, a criação das tabelas no banco de dados é automatizada: ao iniciar o backend pela primeira vez, a ferramenta **Flyway Migration** detectará o banco de dados e executará os scripts versionados (`V1__init_schema.sql` e `V2__seed_expanded_data.sql`).
+Caso prefira executar o backend de forma nativa pela IDE mantendo apenas o banco isolado no Docker:
 
-### Passo a passo completo para: Frontend
+1. Suba apenas o banco de dados via Docker Compose:
+```bash
+docker compose up -d db
 
-Esta aplicação adota o padrão de **Server-Side Rendering (SSR)** via Thymeleaf, o que significa que o frontend (arquivos HTML, CSS e scripts) está **totalmente integrado e embarcado no próprio projeto Spring Boot**.
+```
 
-* Não é necessário instalar ferramentas externas como Node.js ou NPM. O Maven empacota tudo nativamente.
+
+2. Abra a IDE **IntelliJ IDEA** e selecione a pasta raiz do projeto.
+3. Aguarde o Maven carregar as dependências e verifique se o SDK está apontado para o **Java 21**.
+4. Inicie o backend executando a classe principal:
+   `src/main/java/info/bitsolucoes/portal/PortalApplication.java`
+
+*(Nota: A criação das tabelas e as cargas iniciais são executadas de forma 100% automatizada pelo **Flyway Migration** em ambas as opções).*
 
 ---
 
@@ -72,7 +92,7 @@ Esta aplicação adota o padrão de **Server-Side Rendering (SSR)** via Thymelea
 
 ### Variáveis de ambiente
 
-A aplicação utiliza um arquivo **`.env`** localizado na raiz do projeto para desacoplar e proteger credenciais sensíveis, alinhando-se às boas práticas de segurança. Um template seguro (**`.env.example`**) é fornecido no repositório.
+A aplicação utiliza um arquivo **`.env`** localizado na raiz do projeto para desacoplar e proteger credenciais sensíveis. Um template seguro (**`.env.example`**) é fornecido no repositório.
 
 Certifique-se de criar ou ajustar o arquivo `.env` na raiz com as seguintes variáveis:
 
@@ -101,27 +121,14 @@ Todos os utilizadores abaixo compartilham a mesma **senha padrão de acesso:** `
 
 ---
 
-## 4. Execução e Testes
-
-### Como executar o Backend (Via IntelliJ IDEA)
-
-1. Abra a IDE **IntelliJ IDEA**.
-2. Clique em **File > Open...** e selecione a pasta raiz do projeto.
-3. Aguarde o IntelliJ carregar as dependências do `pom.xml`.
-4. Certifique-se de que o SDK do projeto está configurado para o **Java 21**.
-5. Navegue até a classe principal:
-   `src/main/java/info/bitsolucoes/portal/PortalApplication.java`
-6. Clique no ícone de Play verde ao lado da classe e selecione **Run 'PortalApplication'**.
-
-### Como executar os Testes Automatizados (Via IntelliJ IDEA)
+## 4. Testes Automatizados
 
 Para validar todos os testes unitários do projeto (serviços, repositórios e controladores) utilizando a interface gráfica do IntelliJ:
 
 1. No painel lateral esquerdo (**Project Explorer**), navegue até a pasta de testes:
    `src/test/java/info/bitsolucoes/portal`
-2. Para rodar todos os testes de uma só vez, clique com o botão direito em cima do pacote `portal` (ou da pasta `test`), e selecione a opção **Run 'All Tests'** (ou *Run Tests in portal*).
-3. Caso prefira rodar um teste específico isoladamente (por exemplo, o `TicketServiceTest`), abra a classe correspondente e clique no ícone de Play verde localizado ao lado da declaração da classe ou de métodos individuais.
-4. O painel inferior **Run** exibirá o resultado da execução com os indicadores em verde indicando sucesso absoluto.
+2. Clique com o botão direito em cima do pacote `portal` e selecione **Run 'All Tests'**.
+3. O painel inferior **Run** exibirá o resultado da execução com os indicadores em verde indicando sucesso absoluto.
 
 ---
 
@@ -145,3 +152,15 @@ Caso deseje consumir os dados da aplicação de forma desacoplada em formato JSO
 
 * `GET /api/tickets` (Protegido por autenticação / tratado com padrão RFC 9457 em caso de exceções).
 
+---
+
+## 6. Evidências de Funcionamento
+
+### 1. Tela de Login do Portal
+![Tela de Login](./images/login.png)
+
+### 2. Dashboard de Solicitações
+![Dashboard](./images/dashboard.png)
+
+### 3. Gerenciamento dos Tickets
+![Tickets](./images/tickets.png)
