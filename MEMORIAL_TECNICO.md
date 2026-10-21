@@ -59,6 +59,22 @@ Para cada tecnologia eleita, destacam-se os motivos, benefícios frente a altern
 * **Vantagens em Relação a Alternativas:** Evita a complexidade desnecessária de gerenciar uma arquitetura SPA separada para o escopo do desafio.
 * **Impacto na Produtividade:** Agiliza a entrega visual com alto padrão de usabilidade e modais interativos.
 
+
+
+### 2.6 Hospedagem em Produção (Render & Filess.io) e Otimização do HikariCP
+
+* **Motivo da Escolha:** Publicação da aplicação web em nuvem utilizando o **Render** (Web Service via Docker) integrado a um banco de dados MariaDB remoto e gratuito no **Filess.io**, atendendo diretamente à exigência de disponibilizar um link público funcional para avaliação.
+* **Benefícios para o Cenário:** Garante acesso público e contínuo à aplicação de ponta a ponta. Para contornar as limitações rigorosas de recursos computacionais e o teto de conexões simultâneas (*max_user_connections* = 5) inerentes ao plano gratuito do Filess.io, o pool de conexões do HikariCP foi otimizado diretamente no arquivo `application.properties`:
+```properties
+spring.datasource.hikari.minimum-idle=1
+spring.datasource.hikari.maximum-pool-size=2
+
+```
+
+
+Essa configuração impede o esgotamento de sockets abertos pelo Flyway e pelo Spring Boot durante o arranque. Além disso, a aplicação fica acessível publicamente através da URL oficial [https://portal-bit-solucoes.onrender.com](https://portal-bit-solucoes.onrender.com), acompanhada de notas transparentes sobre o tempo de carregamento inicial (*cold start*) decorrente da suspensão por inatividade em instâncias gratuitas.
+* **Vantagens em Relação a Alternativas:** Permite entregar um ambiente web na nuvem de forma ágil, sem custos financeiros e mantendo total fidelidade arquitetural com o modelo conteinerizado via Docker utilizado localmente.
+* **Impacto na Produtividade:** Agiliza a entrega e a validação por parte dos avaliadores, automatizando o ciclo de deploy contínuo via GitHub e garantindo estabilidade operacional sob restrições de infraestrutura *free-tier*.
 ---
 
 ## 3. Justificativa Conceitual

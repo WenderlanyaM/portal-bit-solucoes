@@ -6,6 +6,12 @@
 Aplicação Web Full Stack desenvolvida para o desafio técnico do Processo Seletivo para **Desenvolvedor(a) de Sistemas Júnior** da **bit Soluções**. O sistema consiste em uma plataforma corporativa para registro, acompanhamento, filtragem, ordenação dinâmica e gestão do ciclo de vida de solicitações internas de colaboradores, contemplando tanto interface web (SSR) quanto endpoints dedicados para API REST.
 
 ---
+## Acesso à Aplicação em Produção
+A aplicação foi publicada na nuvem através do Render e está totalmente funcional e acessível publicamente através do link:
+
+**_URL de Acesso: https://portal-bit-solucoes.onrender.com_**
+
+*(**Nota de Desempenho (Plano Gratuito)**: Como a aplicação e a base de dados estão hospedadas em instâncias de planos gratuitos (Render e Filess.io), o servidor entra em modo de suspensão (spin down) após períodos de inatividade. Devido a isso, o primeiro acesso ou carregamento inicial pode demorar alguns segundos para despertar os serviços. Agradecemos a compreensão!)*
 
 ## 1. Pré-requisitos
 
@@ -23,7 +29,7 @@ Para compilar e executar o projeto corretamente, certifique-se de ter os seguint
 
 O gerenciamento das dependências do projeto é realizado pelo **Apache Maven**. As principais bibliotecas configuradas no arquivo `pom.xml` são:
 
-* **Backend e Persistência:**
+**Backend e Persistência:**
 * `Spring Boot` (v4.1.1): Framework base para injeção de dependências e controle MVC.
 * `Spring Security`: Autenticação customizada, criptografia com BCrypt e gerenciamento de sessão HTTP.
 * `Spring Data JPA / Hibernate ORM`: Abstração de dados, mapeamento objeto-relacional (ORM) e otimização via `@EntityGraph`.
@@ -32,17 +38,17 @@ O gerenciamento das dependências do projeto é realizado pelo **Apache Maven**.
 * `MariaDB Connector/J`: Driver JDBC para comunicação com o banco de dados.
 
 
-* **API REST & Tratamento de Erros:**
+**API REST & Tratamento de Erros:**
 * `Spring MVC / ProblemDetail`: Suporte nativo ao padrão RFC 9457 para respostas de erro em JSON padronizado (`/api/tickets`).
 
 
-* **Frontend:**
+**Frontend:**
 * `Thymeleaf`: Motor de renderização dinâmico de templates (Server-Side Rendering - SSR).
 * `Thymeleaf Extras Spring Security`: Integração de permissões de segurança diretamente nas views.
 * `Bootstrap 5` e `Bootstrap Icons`: Framework CSS para layout responsivo, limpo em tons de azul/branco e com suporte a Tema Escuro.
 
 
-* **Testes e DevOps:**
+**Testes e DevOps:**
 * `JUnit 5` e `Mockito`: Suporte a testes unitários e comportamentais isolados.
 * `GitHub Actions`: Pipeline de Integração Contínua (CI/CD) para verificação automática de build e testes a cada *push*.
 
@@ -103,6 +109,16 @@ DB_PASSWORD=usuario123
 ```
 
 > **Nota de Segurança:** O arquivo `.env` real encontra-se listado no `.gitignore` para impedir a exposição de credenciais em repositórios remotos.
+
+### Configuração do HikariCP (Plano Free na Nuvem)
+
+Para garantir a estabilidade em ambientes de produção utilizando serviços de banco de dados na nuvem gratuitos (como o Filess.io) e respeitar rigorosamente as limitações de recursos e o limite máximo de conexões simultâneas (max_user_connections), o pool de conexões do HikariCP foi otimizado diretamente no arquivo application.properties:
+
+```properties
+# Otimização do pool de conexões para instâncias gratuitas
+spring.datasource.hikari.minimum-idle=1
+spring.datasource.hikari.maximum-pool-size=2
+```
 
 ### Credenciais de demonstração
 
